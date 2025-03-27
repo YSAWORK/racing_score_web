@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{name}}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>{{ driver.name }}`s racing statistic</h1>
+    <table> <!-- Table of racing results -->
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Team</th>
+        <th>Start time</th>
+        <th>Finish time</th>
+        <th>Time</th>
+        <th>Errors</th>
+      </tr>
+        <tr>
+          <td> <!-- Code -->
+            {{ driver.abbr }}
+          </td>
+          <td> <!-- Name -->
+            {{ driver.name }}
+          </td>
+          <td> <!-- Team -->
+            {{ driver.team }}
+          </td>
+          <td> <!-- Start time -->
+            {{ driver.start_time }}
+          </td>
+          <td> <!-- Finish time -->
+            {{ driver.end_time }}
+          </td>
+          <td> <!-- Racing time -->
+            {{ driver.time }}
+          </td>
+          <td> <!-- Position -->
+            {{ driver.position }}
+          </td>
+        </tr>
+    </table>
+</body>
+</html>

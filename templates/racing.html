@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Monaco 2018</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Web Report of Monaco 2018 Racing</h1>
+    <table> <!-- Table of racing results -->
+      <tr>
+        <th>#</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Team</th>
+        <th>Time</th>
+      </tr>
+      {% for driver in data %}
+        {% if not driver.error %}
+            <tr>
+              <td class="Position"> <!-- Position -->
+                {{ driver.position }}
+              </td>
+              <td class='Code'> <!-- Code -->
+                {{ driver.abbr }}
+              </td>
+              <td class='Name'> <!-- Name -->
+                {{ driver.name }}
+              </td>
+              <td> <!-- Team -->
+                {{ driver.team }}
+              </td>
+              <td> <!-- Racing time -->
+                {{ driver.time }}
+              </td>
+            </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+    <h4 class="error">TIMEDATA`s ERRORS (drivers with incorrect timedata):</h4> <!-- Errors (finish time before start time) -->
+    <ul class="error">
+        {% for driver in data %}
+            {% if driver.error %}
+                <li>{{ driver.name }} ({{ driver.abbr }}) from {{ driver.team }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+    <h4 class="error">RESOURCE`s ERRORS</h4> <!-- Errors (incorrect format of input data) -->
+    <ul class="error">
+        {% for error in errors%}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Drivers</title>
+</head>
+<body>
+    <h1>List of driver's names and codes</h1>
+    <table> <!-- Table of racing results -->
+      <tr>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Team</th>
+        <th>Errors</th>
+      </tr>
+      {% for driver in data %}
+        <tr>
+          <td> <!-- Code -->
+            <a href="{{ url_for('drivers', driver_id = driver.abbr) }}">{{ driver.abbr }}</a>
+          </td>
+          <td class="name"> <!-- Name -->
+            {{ driver.name }}
+          </td>
+          <td> <!-- Team -->
+            {{ driver.team }}
+          </td>
+          <td> <!-- Errors (incorrect data) -->
+              {% if driver.error %}
+                {{ driver.error }}
+              {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+    <h4 class="error">RESOURCE`s ERRORS</h4> <!-- Errors (incorrect format of input data) -->
+    <ul class="error">
+        {% for error in errors%}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
