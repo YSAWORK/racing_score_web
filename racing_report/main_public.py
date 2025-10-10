@@ -1,8 +1,14 @@
+# ./racing_report/main_public.py
+# This module sets up a Flask web application to display racing reports and driver information.
+
+###### IMPORT TOOLS ######
 import config
 from flask import Flask, render_template, request
 from functools import lru_cache
 from racing_report.bild_report import get_list_info, get_driver_info
 
+
+###### FLASK APP CONFIG ######
 app = Flask(
     __name__,
     template_folder=f"{config.BASE_DIR}/templates",
@@ -19,6 +25,7 @@ def main():
 ###### page with main racing results ######
 @app.route("/report")
 def racing():
+    """ Page displaying the main racing results. """
     order = request.args.get("order", default="desc", type=str)
     if order not in ("desc", "asc", ""):
         return f"Wrong parameter 'order' -> '{order}'. Choose from between 'desc' and 'asc' (for example: '/drivers?order=asc')"
@@ -32,8 +39,10 @@ def racing():
 ###### page with info about drivers ######
 @app.route("/drivers")
 def drivers():
+    """ Page displaying information about drivers. """
     @lru_cache(maxsize=100)
     def wrong_data_func(data):
+        """ Function to filter drivers with incorrect data. """
         return filter(lambda el: el.error == "incorrect data", data)
 
     order = request.args.get("order", default="desc", type=str)
@@ -61,6 +70,7 @@ def drivers():
             )
 
 
+###### RUN FLASK APP ######
 if __name__ == "__main__":  # pragma: no cover
     app.run(
         debug=config.debug,

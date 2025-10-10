@@ -1,3 +1,7 @@
+# ./config.py
+# This module contains configuration settings for the racing reports application.
+
+###### IMPORT TOOLS ######
 import os, sys
 
 # base dir config

@@ -1,3 +1,4 @@
+###### import tools ######
 from datetime import datetime
 import pytest
 from bs4 import BeautifulSoup
@@ -5,14 +6,18 @@ import racing_report
 from racing_report import Drivers
 
 
+
+# create a test client using the Flask application configured for testing
 @pytest.fixture
 def client():
+    """ Fixture to create a test client for the Flask application. """
     with racing_report.app.test_client() as client:
         yield client
 
 
 ###### test main page ######
 def test_main_page(client):
+    """ Test the main page of the application. """
     response = client.get("/")
     assert response.status_code == 200
     assert response.data == b"Main page"
@@ -21,6 +26,7 @@ def test_main_page(client):
 ###### test func 'racing' ######
 #----- test sorting by order DESC -----#
 def test_racing_valid_order_desc(client):
+    """ Test the racing report page with valid 'desc' order parameter. """
     response = client.get("/report?order=desc")
     assert response.status_code == 200
     soup = BeautifulSoup(response.data, "html.parser")
@@ -35,6 +41,7 @@ def test_racing_valid_order_desc(client):
 
 #----- test sorting by order ASC -----#
 def test_racing_report_order_asc(client):
+    """ Test the racing report page with valid 'asc' order parameter. """
     response = client.get("/report?order=asc")
     assert response.status_code == 200
     soup = BeautifulSoup(response.data, "html.parser")
@@ -49,6 +56,7 @@ def test_racing_report_order_asc(client):
 
 #----- test with different order`s data -----#
 def test_racing_function_invalid_sorted(client, mocker):
+    """ Test the racing report page with various 'order' parameters. """
     order_list = ('desc', "asc", '', "NOT_EXISTS_ORDER")
     for order in order_list:
         response = client.get(f"/report?order={order}")
@@ -58,6 +66,7 @@ def test_racing_function_invalid_sorted(client, mocker):
 ###### test func 'drivers' ######
 #----- test creating the drivers`s list -----#
 def test_drivers_all(client, mocker):
+    """ Test the drivers page displaying all drivers. """
     mock_data = (
         [
             Drivers(
@@ -97,6 +106,7 @@ def test_drivers_all(client, mocker):
 
 #----- test raising exceptions in func 'drivers' with invalid input data -----#
 def test_drivers_all_invalid_data(client):
+    """ Test the drivers page with invalid data causing TypeError. """
     with pytest.raises(TypeError):
         mock_data = (
             [
@@ -122,6 +132,7 @@ def test_drivers_all_invalid_data(client):
 
 #----- test getting info about driver -----#
 def test_drivers_one(client, mocker):
+    """ Test the drivers page displaying information about a specific driver. """
     mock_data = Drivers(
         abbr="DRT",
         name="Driver_2",
@@ -138,6 +149,7 @@ def test_drivers_one(client, mocker):
 
 #----- test with different drivers`s id`s data -----#
 def test_drivers_one_driver_id(client, mocker):
+    """ Test the drivers page with various 'driver_id' parameters. """
     mock_data = Drivers(
         abbr="DRT",
         name="Driver_2",

@@ -1,3 +1,8 @@
+# ./racing_report/bild_report.py
+# This module processes racing data from log files and generates reports.
+
+
+###### IMPORT TOOLS ######
 import datetime, config
 from dataclasses import dataclass
 from functools import lru_cache
@@ -6,6 +11,7 @@ from functools import lru_cache
 ###### class of drivers and their results ######
 @dataclass
 class Drivers:
+    """ Class representing a driver and their racing results. """
     name: str
     abbr: str
     team: str
@@ -56,6 +62,7 @@ def get_datetime_info(
 
 ###### get tuple of lists (1) of Drivers`s class objects with full info about drivers and (2) errors ######
 def get_drivers_list(drivers_info: list, start_data: list, end_data: list) -> tuple:
+    """ Get a list of Drivers objects and a list of errors from source data. """
     error_list = list()
     start_datetime, error_list = get_datetime_info(start_data, error_list)
     end_datetime, error_list = get_datetime_info(end_data, error_list)
@@ -95,6 +102,7 @@ def get_data() -> tuple:
         open(f"{config.BASE_DIR}/log_data/start.log") as start,
         open(f"{config.BASE_DIR}/log_data/end.log") as end,
     ):
+        """ Get data from source files. """
         return (
             drivers.read().splitlines(),
             start.read().splitlines(),
@@ -104,6 +112,7 @@ def get_data() -> tuple:
 
 ###### get drivers`s position in racing (attribute Drivers.position) ######
 def get_racing_position(racing_data: list):
+    """ Assign positions to drivers based on their racing times. """
     index_position = 1
     for item in enumerate(racing_data):
         if item[1].error:
@@ -115,6 +124,7 @@ def get_racing_position(racing_data: list):
 ###### get tuple of lists (1) of racing results/drivers and (2) errors ######
 @lru_cache(maxsize=100)
 def get_list_info(order: str, attr: str) -> tuple:
+    """ Get sorted racing results and errors. """
     if attr not in ("name", "time"):
         raise ValueError("Wrong value of order attribute")
     elif order not in ("asc", "desc", ""):
@@ -132,6 +142,7 @@ def get_list_info(order: str, attr: str) -> tuple:
 ###### get info about driver ######
 @lru_cache(maxsize=100)
 def get_driver_info(driver_id: str):
+    """ Get detailed information about a specific driver by their abbreviation. """
     data = get_data()
     results = get_drivers_list(*data)[0]
     result_list = list(filter(lambda el: el.abbr == driver_id, results))

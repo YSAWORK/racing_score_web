@@ -1,13 +1,17 @@
+###### import tools #######
 import datetime, pytest, os, config
 import racing_report as code
 
 
+###### test functions ######
+# test get_data function
 def test_get_data():
     with (
         open(f"{config.BASE_DIR}/log_data/abbreviations.txt") as drivers,
         open(f"{config.BASE_DIR}/log_data/start.log") as start,
         open(f"{config.BASE_DIR}/log_data/end.log") as end,
     ):
+        """ Get data from source files. """
         assert code.get_data() == (
             drivers.read().splitlines(),
             start.read().splitlines(),
@@ -15,6 +19,7 @@ def test_get_data():
         )
 
 
+# test get_datetime_info function
 @pytest.mark.parametrize(
     "time_info, errors, result",
     [
@@ -45,9 +50,11 @@ def test_get_data():
     ],
 )
 def test_get_datetime_info(time_info, errors, result):
+    """ Test get_datetime_info function. """
     assert code.get_datetime_info(time_info, errors) == result
 
 
+# test get_datetime_info function with wrong type of time_info
 @pytest.mark.parametrize(
     "time_info, errors",
     [
@@ -68,10 +75,12 @@ def test_get_datetime_info(time_info, errors, result):
     ],
 )
 def test_get_datetime_info_failtype(time_info, errors):
+    """ Test get_datetime_info function with wrong type of time_info. """
     with pytest.raises(TypeError):
         code.get_datetime_info(time_info, errors)
 
 
+# test get_drivers_list function
 @pytest.mark.parametrize(
     "drivers_info, start_data, end_data, drivers_data, error_list",
     [
@@ -125,6 +134,7 @@ def test_get_datetime_info_failtype(time_info, errors):
     ],
 )
 def test_get_drivers_list(drivers_info, start_data, end_data, drivers_data, error_list):
+    """ Test get_drivers_list function. """
     drivers_list = []
     for data in drivers_data:
         object_t = code.Drivers(
@@ -144,6 +154,7 @@ def test_get_drivers_list(drivers_info, start_data, end_data, drivers_data, erro
     )
 
 
+# test get_list_info function
 @pytest.mark.parametrize(
     "order, attr",
     [
@@ -159,5 +170,6 @@ def test_get_drivers_list(drivers_info, start_data, end_data, drivers_data, erro
     ],
 )
 def test_get_list_info_failvalue(order, attr):
+    """ Test get_list_info function with wrong parameters. """
     with pytest.raises(ValueError):
         code.get_list_info(order, attr)
